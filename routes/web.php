@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('library/index', [LibraryController::class, 'index']);
     Route::get('library/borrow/{id}', [LibraryController::class, 'borrowingForm']);
     Route::post('library/borrow', [LibraryController::class, 'borrow']);
+    Route::post('library/return', [LibraryController::class, 'returnBook']);
+    Route::get('library/history', [LibraryController::class, 'history']);
 
 });
 
