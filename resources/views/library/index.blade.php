@@ -29,9 +29,23 @@
                                     <tr class="">
                                         <td>{{ $library->id }}</td>
                                         <td>{{ $library->name }}</td>
-                                        <td>
-                                            <a class="btn btn-info" href="{{ url('library/borrow/'. $library->id) }}">brrow</a>
-                                        </td>
+                                        @if($library->user_id === 0)
+                                            <td>
+                                                <a class="btn btn-info" href="{{ url('library/borrow/'. $library->id) }}">brrow</a>
+                                            </td>
+                                        @elseif($library->user_id === Auth::user()->id)
+                                            <td>
+                                                <form action="{{ url('library/return') }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger">return</button>
+                                                    <input type="hidden" name="id" value="{{ $library->id }}">
+                                                </form>
+                                            </td>
+                                        @else
+                                            <td>
+                                                <button class="btn btn-success" type="button" disabled>borrowing</button>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

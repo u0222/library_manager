@@ -47,5 +47,36 @@ class LibraryController extends Controller
 
         return redirect("/library/index");
 
-    }    
+    }
+
+    //返却ボタンを押した際に書籍の返却処理
+    public function returnBook(Request $request)
+    {
+        $library = Library::find($request->id);
+        $library->user_id = 0;
+        $library->save();
+
+        $sql = Log::query();
+        $sql->where('user_id', Auth::id());
+        $sql->where('library_id', $request->id);
+        $sql->where('user_id', Auth::id());
+        $sql->orderBy("rent_date", "desc");
+        $log = $sql->first();
+        $log->return_date = Carbon::now();
+        $log->save();
+
+        return redirect("/library/index");
+
+    }   
+
+    //書籍貸し出しフォームを表示する
+    public function history()
+    {
+        $logs = Log::where('user_id', Auth::id())->get();
+
+        return view('library.borrowHistory', [
+            'logs' => $logs,
+            'user' => Auth::user(),
+        ]);
+    }
 }
